@@ -1,7 +1,5 @@
 package hertz.interview.controllers.mappers;
 
-
-import hertz.interview.entities.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

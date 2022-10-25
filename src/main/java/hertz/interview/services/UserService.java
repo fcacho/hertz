@@ -36,8 +36,8 @@ public class UserService {
  public String returnBook(Long userId, Long bookId) {
      Optional<BookEntity> book = Optional.ofNullable(bookService.getBook(bookId).orElseThrow(EntityNotFoundException::new));
      Optional<UserEntity> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(EntityNotFoundException::new));
-     return book.get().getDate() == null                   ? "The book is not lent"     :
-            !book.get().getUserEntity().equals(user.get()) ? "The book has been lent to other user": returnBook(user.get(), book.get());
+     return book.get().getDate() == null                   ? "The book is not loaned"     :
+            !book.get().getUserEntity().equals(user.get()) ? "The book has been loaned to other user": returnBook(user.get(), book.get());
     }
 
     private String returnBook(UserEntity user, BookEntity book) {
@@ -52,10 +52,15 @@ public class UserService {
 
     }
 
- public String  loanBook(Long userId, Long bookId) {
+  //  - maximum number of books loaned at any time is 3 per user
+  // if a member has any outstanding loaned books, they cannot loan any more until all books returned.
+  // there is only 1 copy of each book
+
+    public String  loanBook(Long userId, Long bookId) {
         Optional<BookEntity> book = Optional.ofNullable(bookService.getBook(bookId).orElseThrow(EntityNotFoundException::new));
         Optional<UserEntity> user = Optional.ofNullable(userRepository.findById(userId).orElseThrow(EntityNotFoundException::new));
-        return book.get().getDate() != null  ? "The book is not available": loanBook(user.get(), book.get());
+        return  user.get().getBookEntityList().size() > 2 ? "This user can't loan more books. Maximum allowed is 3" :
+                book.get().getDate() != null  ? "The book is not available": loanBook(user.get(), book.get());
  }
  private String loanBook(UserEntity user, BookEntity book) {
         LocalDate now = LocalDate.now();
@@ -68,6 +73,6 @@ public class UserService {
         book.setUserEntity(user);
         book.setDate(LocalDate.now());
         bookRepository.save(book);
-        return "the book has been lent";
+        return "the book has been loaned";
  }
 }

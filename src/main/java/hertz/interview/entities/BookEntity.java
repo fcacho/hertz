@@ -23,6 +23,7 @@ public class BookEntity {
     private String name;
     @Column
     private String author;
+    //each book can have more than one category
     @ManyToMany( )
     List<CategoryEntity> categoryEntityList;
     @ManyToOne()

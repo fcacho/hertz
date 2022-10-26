@@ -3,7 +3,7 @@
 This library has been developed using intellij and I use mvn to build it.
 It runs on a spring boot server and the data is saved in a memory database. 
 To run it, open the project in your intellij application.
-Main application: hertz.interview.InterviewApplication.
+Main application: hertz.interview.InterviewApplication. Use the application.properties to see the database logs.
 Database: com.h2database.
 lombok plug in is required to build the application
 Two users with ids, one and two are created when the application starts.
@@ -37,5 +37,6 @@ USER
 
 To do: 
 - add transactions management
+- Add end points parameters validations.
 - Improve returns messages returns and errors.
 - Add unit testing and integration testing.

@@ -28,22 +28,25 @@ public class UserController {
     public ResponseEntity<List<BookVM>> getUserBooks(@RequestParam() Long userId) {
         // the book entity has to be mapped to a simple object to be able to return it correctly
         Optional<UserEntity> user = userService.getUser(userId);
-        return user.isPresent() ? new ResponseEntity<>(mapToBookVM(user.get().getBookEntityList()), HttpStatus.OK) :
-                new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return user.map(userEntity -> new ResponseEntity<>(mapToBookVM(userEntity.getBookEntityList()), HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    // simple mapping to avoid loops when the object is converted to json. I could use also @Mapper(componentModel = "spring").
+    // TODO change this mapping for the spring standard @Mapper(componentModel = "spring").
     List<BookVM> mapToBookVM(List<BookEntity> list) {
         return list.stream().map(bookEntity -> new BookVM(bookEntity.getName(), bookEntity.getAuthor())).collect(Collectors.toList());
 
     }
 
+    // TODO add @Valid expressions to validate user and bookId exist like @ValidUserId
+    // TODO improve return message with json format and codes.
     @PutMapping("/loanBook")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<String> loanBook(@RequestParam Long userId, @RequestParam Long bookId) {
         return new ResponseEntity<>(userService.loanBook(userId, bookId), ACCEPTED);
     }
 
+    // TODO add @Valid expresions to validate user and bookId exist like @ValidUserId
+    // TODO improve return message with json format and codes.
     @PutMapping("/returnBook")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<String> returnBook(@RequestParam Long userId, @RequestParam Long bookId) {

@@ -17,7 +17,7 @@ private final BookService bookService;
         this.bookService = bookService;
     }
 
-
+    // TODO add @Valid expresions to validate the message body and category exits.
     @PostMapping("/createBook")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createBook(@RequestBody Book book)  {

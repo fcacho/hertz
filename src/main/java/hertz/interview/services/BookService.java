@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Service
 public class BookService {
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
 
     private final CategoryRepository categoryRepository;
@@ -20,7 +20,8 @@ public class BookService {
     public BookService(BookRepository bookRepository, CategoryRepository categoryRepository) {
         this.bookRepository = bookRepository;
         this.categoryRepository = categoryRepository;
-        // add two categories to the database so a book can be linked to these categories
+        // add two example categories to the database so a book can be linked to these categories.
+        //TODO Categories could be added to the cache.
         categoryRepository.saveAll(Arrays.asList(new CategoryEntity(1L, "Category1"), new CategoryEntity(2L, "Category2")));
     }
 
@@ -44,7 +45,7 @@ public class BookService {
         return bookRepository.findById(id);
     }
 
-
+    // TODO check if a book is loaned before delete it.
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }

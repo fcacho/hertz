@@ -64,10 +64,13 @@ public class UserService {
  }
  private String loanBook(UserEntity user, BookEntity book) {
         LocalDate now = LocalDate.now();
+        // If a book hasn't been returned after a week the user is blocked and won't be able to borrow a book until all books are returned
         Boolean blockUser = user.getBookEntityList().stream().anyMatch(b -> b.getDate().isBefore(now.minusDays(7)));
         if (user.getBlocked() || blockUser) {
-            user.setBlocked(true);
-            userRepository.save(user);
+            if (user.getBlocked()== false)  {
+                user.setBlocked(true);
+                userRepository.save(user);
+            }
             return "The user is blocked";
         }
         book.setUserEntity(user);
